@@ -3,6 +3,7 @@ const ctx = canvas.getContext("2d");
 const colors = document.getElementsByClassName("controls_colors");
 const range = document.getElementById("jsRange");
 const modeBtn = document.getElementById("jsMode");
+const saveBtn = document.getElementById("jsSave");
 
 const INITIAL_COLOR = "#2c2c2c";
 const CANVAS_SIZE = 700;
@@ -11,6 +12,8 @@ const CANVAS_SIZE = 700;
 canvas.width = CANVAS_SIZE;
 canvas.height = CANVAS_SIZE;
 
+ctx.fillStyle = "white";
+ctx.fillRect(0, 0, canvas.width, canvas.height);
 ctx.strokeStyle = INITIAL_COLOR; // 브러쉬 색상 값
 ctx.fillStyle = INITIAL_COLOR;
 ctx.lineWidth = 2.5; // 브러쉬 라인 너비
@@ -65,12 +68,25 @@ function handleCanvasClick() {
   }
 }
 
+function handleRightClick(event) {
+  event.preventDefault();
+}
+
+function handleSaveClick() {
+  const image = canvas.toDataURL(); // 이미지 url 생성
+  const link = document.createElement("a");
+  link.href = image;
+  link.download = "PaintJS";
+  link.click(); // 임의로 클릭
+}
+
 if (canvas) {
   canvas.addEventListener("mousemove", onMouseMove);
   canvas.addEventListener("mousedown", startPainting);
   canvas.addEventListener("mouseup", stopPainting);
   canvas.addEventListener("mouseleave", stopPainting);
   canvas.addEventListener("click", handleCanvasClick);
+  canvas.addEventListener("contextmenu", handleRightClick); // 캔버스내에서 우클릭 했을 때
 }
 
 Array.from(colors).forEach((color) =>
@@ -83,4 +99,8 @@ if (range) {
 
 if (modeBtn) {
   modeBtn.addEventListener("click", handleModeClick);
+}
+
+if (saveBtn) {
+  saveBtn.addEventListener("click", handleSaveClick);
 }
